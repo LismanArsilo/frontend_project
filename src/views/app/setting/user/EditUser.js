@@ -1,38 +1,87 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import config from "../../../../config/config";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { GetSkillTypeRequest } from "../../../../redux-saga/actions/UserDrop";
-import { AddSkillRequest } from "../../../../redux-saga/actions/MasterSetting";
+import {
+  GetOneUserRequest,
+  EditUserRequest,
+  EditNoUserRequest,
+} from "../../../../redux-saga/actions/MasterSetting";
 
 export default function SkillAdd(props) {
-  const { skillType } = useSelector((state) => state.userDropState);
+  const { user } = useSelector((state) => state.masterSettingState);
   const dispatch = useDispatch();
-
+  const [previewImg, setPreviewImg] = useState();
+  const [uploaded, setUploaded] = useState(false);
   useEffect(() => {
-    dispatch(GetSkillTypeRequest());
+    dispatch(GetOneUserRequest(props.id));
+  }, []);
+  console.log(props.id);
+  useEffect(() => {
+    let img = `${config.domain}/user/${user.user_entity_id}/images/${user.user_photo}`;
+    setPreviewImg(img);
   }, []);
 
+  const uploadOnChange = (name) => (event) => {
+    let reader = new FileReader();
+    let file = event.target.files[0];
+
+    reader.onload = () => {
+      formik.setFieldValue("profile", file);
+      setPreviewImg(reader.result);
+    };
+    reader.readAsDataURL(file);
+    setUploaded(true);
+  };
+
+  const onClearImage = (event) => {
+    event.preventDefault();
+    setUploaded(false);
+    setPreviewImg(null);
+  };
+
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      uski_entity_id: props.id,
-      uski_skty_name: "",
+      user_name: user.user_name,
+      user_first_name: user.user_first_name,
+      user_last_name: user.user_last_name,
+      user_photo: user.user_photo,
     },
     validationSchema: Yup.object().shape({
-      uski_entity_id: Yup.string().required(),
-      uski_skty_name: Yup.string("Enter Skill Name").required(
+      user_name: Yup.string("Enter Skill Name").required(
+        "First Name is Required"
+      ),
+      user_first_name: Yup.string("Enter Skill Name").required(
+        "First Name is Required"
+      ),
+      user_last_name: Yup.string("Enter Skill Name").required(
         "Skill Name is Required"
       ),
     }),
     onSubmit: async (values) => {
-      const payload = {
-        uski_entity_id: parseInt(values.uski_entity_id),
-        uski_skty_name: values.uski_skty_name,
-      };
-      dispatch(AddSkillRequest(payload));
-      props.closeAdd();
+      if (uploaded === true) {
+        let payload = new FormData();
+        payload.append("user_name", values.user_name);
+        payload.append("user_first_name", values.user_first_name);
+        payload.append("user_last_name", values.user_last_name);
+        payload.append("entity_id", values.entity_id);
+        console.info(payload);
+        dispatch(EditUserRequest(payload));
+      } else {
+        const payload = {
+          user_name: values.user_name,
+          user_first_name: values.user_first_name,
+          user_last_name: values.user_last_name,
+          user_photo: values.user_photo,
+          user_entity_id: parseInt(user.user_entity_id),
+        };
+        console.info(payload);
+        dispatch(EditNoUserRequest(payload));
+      }
+      // props.closeAdd();
       window.alert("Data Add Succesfully");
-      console.log(payload);
     },
   });
   return (
@@ -60,52 +109,115 @@ export default function SkillAdd(props) {
         <div className="border border-slate-800 mx-2 mr-6 mt-2 rounded-2xl mb-7 ">
           <div className="border border-slate-500 m-5">
             <div className="pl-2 mt-3 border-b-2 mx-2">
-              <h1>Add Skills</h1>
+              <h1>Edit Profile</h1>
             </div>
             <div>
               <form onSubmit={formik.handleSubmit}>
-                <div>
-                  <input
-                    type="hidden"
-                    name="uski_entity_id"
-                    id="uski_entity_id"
-                    value={formik.values.uski_entity_id}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  <div className="m-7 flex items-center mx-14 ">
-                    <label htmlFor="skill" className="pr-10">
-                      Skills
-                    </label>
-                    <select
-                      className="
-                    w-40   
-                    border-0 border-b-2 border-gray-200
-                    focus:ring-0 focus:border-black
-                  "
-                      value={formik.values.uski_skty_name}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      id="uski_skty_name"
-                      name="uski_skty_name"
-                    >
-                      <option value={""}>-- Chose --</option>
-                      {Array.isArray(skillType)
-                        ? skillType &&
-                          skillType.map((skill, index) => (
-                            <option key={index} value={skill.skty_name}>
-                              {skill.skty_name}
-                            </option>
-                          ))
-                        : null}
-                    </select>
-                    <div className="text-sm text-red-600 ml-3">
-                      {formik.touched.uski_skty_name &&
-                      formik.errors.uski_skty_name ? (
-                        <span>{formik.errors.uski_skty_name}</span>
-                      ) : null}
+                <div className="mt-3">
+                  <div className="flex justify-between mb-5">
+                    <div>
+                      <div>
+                        <input
+                          type="hidden"
+                          name="user_entity_id"
+                          id="user_entity_id"
+                          value={formik.values.user_entity_id}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <label
+                          htmlFor="usex_title"
+                          className="mr-[2.1rem] ml-7 block"
+                        >
+                          User Name
+                        </label>
+                        <input
+                          type="text"
+                          name="user_name"
+                          id="user_name"
+                          defaultValue={formik.values.user_name}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          className="border border-slate-400 px-2 py-1 text-sm w-56 ml-7 rounded-md"
+                          placeholder="Input Your User Name . . ."
+                        />
+                        <div className="text-sm text-red-600 ml-[8.5rem] mt-1">
+                          {/* {formik.touched.usex_profile_headline &&
+                        formik.errors.usex_profile_headline ? (
+                        <span>{formik.errors.usex_profile_headline}</span>
+                        ) : null} */}
+                        </div>
+                      </div>
+                      <div className="mt-3 flex">
+                        <div className="">
+                          <label
+                            htmlFor="usex_title"
+                            className="mr-[2.1rem] ml-7 block"
+                          >
+                            First Name
+                          </label>
+                          <input
+                            type="text"
+                            name="user_name"
+                            id="user_name"
+                            defaultValue={formik.values.user_first_name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="border border-slate-400 px-2 py-1 text-sm w-56 rounded-md ml-7"
+                            placeholder="Input Your User Name . . ."
+                          />
+                          <div className="text-sm text-red-600 ml-[8.5rem] mt-1">
+                            {/* {formik.touched.usex_profile_headline &&
+                      formik.errors.usex_profile_headline ? (
+                      <span>{formik.errors.usex_profile_headline}</span>
+                      ) : null} */}
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="usex_title"
+                            className="mr-[2.1rem] ml-7 block"
+                          >
+                            Last Name
+                          </label>
+                          <input
+                            type="text"
+                            name="user_name"
+                            id="user_name"
+                            defaultValue={formik.values.user_last_name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className="border border-slate-400 px-2 py-1 text-sm w-56 rounded-md ml-7"
+                            placeholder="Input Your User Name . . ."
+                          />
+                          <div className="text-sm text-red-600 ml-[8.5rem] mt-1">
+                            {/* {formik.touched.usex_profile_headline &&
+                        formik.errors.usex_profile_headline ? (
+                        <span>{formik.errors.usex_profile_headline}</span>
+                        ) : null} */}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <img
+                        className="ml-7 rounded-full h-24 border-2"
+                        src={previewImg}
+                        height={100}
+                        width={100}
+                        crossOrigin="anonymous"
+                      ></img>
+                      <input
+                        className="mt-2 text-sm"
+                        id="profile"
+                        name="profile"
+                        type="file"
+                        accept="image/*"
+                        onChange={uploadOnChange("file")}
+                      />
                     </div>
                   </div>
+
                   <div className="flex justify-end border-t-4 bg-slate-300">
                     <div className="flex gap-3 my-2 mr-3">
                       <div className="flex items-stretch border border-red-500 rounded-md px-2 py-1 ring-1 ring-red-500 hover:bg-red-600 mr-2 text-red-500 font-semibold hover:text-white shadow-md shadow-red-500">

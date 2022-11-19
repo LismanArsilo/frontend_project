@@ -17,13 +17,16 @@ import {
   GetSkillRequest,
   DelSkillRequest,
 } from "../../../redux-saga/actions/MasterSetting";
+import EditUser from "./user/EditUser";
+import EmailAdd from "./email/EmailAdd";
+import EmailEdit from "./email/EmailEdit";
+import PhoneAdd from "./phone/PhoneAdd";
+import PhoneEdit from "./phone/PhoneEdit";
+import AddressAdd from "./address/AddressAdd";
 import ExperienceAdd from "./experience/ExperienceAdd";
 import ExperienceEdit from "./experience/ExperienceEdit";
-import AddressAdd from "./address/AddressAdd";
-import SkillAdd from "./skill/SkillAdd";
 import EducationAdd from "./education/EducationAdd";
-import PhoneAdd from "./phone/PhoneAdd";
-import EmailAdd from "./email/EmailAdd";
+import SkillAdd from "./skill/SkillAdd";
 
 export default function Setting() {
   const dispatch = useDispatch();
@@ -34,13 +37,16 @@ export default function Setting() {
   const [idNext, setIdNext] = useState();
   const [refresh, setRefresh] = useState(false);
   // Display
-  const [displaySkillAdd, setDisplaySkillAdd] = useState(false);
-  const [displayExperienceAdd, setDisplayExperienceAdd] = useState(false);
-  const [displayEducationAdd, setDisplayEducationAdd] = useState(false);
+  const [displayUserEdit, setDisplayUserEdit] = useState(false);
   const [displayPhoneAdd, setDisplayPhoneAdd] = useState(false);
+  const [displayPhoneEdit, setDisplayPhoneEdit] = useState(false);
   const [displayEmailAdd, setDisplayEmailAdd] = useState(false);
+  const [displayEmailEdit, setDisplayEmailEdit] = useState(false);
   const [displayAddressAdd, setDisplayAddressAdd] = useState(false);
+  const [displayEducationAdd, setDisplayEducationAdd] = useState(false);
+  const [displayExperienceAdd, setDisplayExperienceAdd] = useState(false);
   const [displayExperienceEdit, setDisplayExperienceEdit] = useState(false);
+  const [displaySkillAdd, setDisplaySkillAdd] = useState(false);
 
   useEffect(() => {
     dispatch(GetOneUserRequest(1));
@@ -99,11 +105,31 @@ export default function Setting() {
     setId(id);
     setIdNext(idNext);
   };
+  const onEditUser = (id) => {
+    setDisplayUserEdit(true);
+    setId(id);
+  };
+  const onEditEmail = (id, idNext) => {
+    setDisplayEmailEdit(true);
+    setId(id);
+    setIdNext(idNext);
+  };
+  const onEditPhone = (id, idNext) => {
+    setDisplayPhoneEdit(true);
+    setId(id);
+    setIdNext(idNext);
+  };
 
   return (
     <div className="m-5 p-5 border border-slate-700">
       {/* User */}
-      {displayExperienceAdd ? (
+      {displayUserEdit ? (
+        <EditUser
+          closeAdd={() => setDisplayUserEdit(false)}
+          id={id}
+          refresh={() => setRefresh(true)}
+        />
+      ) : displayExperienceAdd ? (
         <ExperienceAdd
           closeAdd={() => setDisplayExperienceAdd(false)}
           id={id}
@@ -117,20 +143,49 @@ export default function Setting() {
           refresh={() => setRefresh(true)}
         />
       ) : displaySkillAdd ? (
-        <SkillAdd closeAdd={() => setDisplaySkillAdd(false)} id={id} />
-      ) : displayExperienceAdd ? (
-        <ExperienceAdd
-          closeAdd={() => setDisplayExperienceAdd(false)}
+        <SkillAdd
+          closeAdd={() => setDisplaySkillAdd(false)}
           id={id}
+          refresh={() => setRefresh(true)}
         />
       ) : displayEducationAdd ? (
-        <EducationAdd closeAdd={() => setDisplayEducationAdd(false)} id={id} />
+        <EducationAdd
+          closeAdd={() => setDisplayEducationAdd(false)}
+          id={id}
+          refresh={() => setRefresh(true)}
+        />
+      ) : displayPhoneEdit ? (
+        <PhoneEdit
+          closeAdd={() => setDisplayPhoneEdit(false)}
+          id={id}
+          idNext={idNext}
+          refresh={() => setRefresh(true)}
+        />
       ) : displayPhoneAdd ? (
-        <PhoneAdd closeAdd={() => setDisplayPhoneAdd(false)} id={id} />
+        <PhoneAdd
+          closeAdd={() => setDisplayPhoneAdd(false)}
+          id={id}
+          refresh={() => setRefresh(true)}
+        />
       ) : displayEmailAdd ? (
-        <EmailAdd closeAdd={() => setDisplayEmailAdd(false)} id={id} />
+        <EmailAdd
+          closeAdd={() => setDisplayEmailAdd(false)}
+          id={id}
+          refresh={() => setRefresh(true)}
+        />
+      ) : displayEmailEdit ? (
+        <EmailEdit
+          closeAdd={() => setDisplayEmailEdit(false)}
+          id={id}
+          idNext={idNext}
+          refresh={() => setRefresh(true)}
+        />
       ) : displayAddressAdd ? (
-        <AddressAdd closeAdd={() => setDisplayAddressAdd(false)} id={id} />
+        <AddressAdd
+          closeAdd={() => setDisplayAddressAdd(false)}
+          id={id}
+          refresh={() => setRefresh(true)}
+        />
       ) : displaySkillAdd ? (
         <SkillAdd closeAdd={() => setDisplaySkillAdd(false)} id={id} />
       ) : (
@@ -239,7 +294,9 @@ export default function Setting() {
                         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                       />
                     </svg>
-                    <button>Edit</button>
+                    <button onClick={() => onEditUser(user.user_entity_id)}>
+                      Edit
+                    </button>
                   </div>
                 </div>
               </div>
@@ -324,7 +381,16 @@ export default function Setting() {
                                     d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                                   />
                                 </svg>
-                                <button>Edit</button>
+                                <button
+                                  onClick={() =>
+                                    onEditEmail(
+                                      email.pmail_entity_id,
+                                      email.pmail_id
+                                    )
+                                  }
+                                >
+                                  Edit
+                                </button>
                               </div>
                               <div className="flex items-stretch border border-red-500 rounded-md px-2 py-1 ring-1 ring-red-500 hover:bg-red-600 mr-3 mb-1 text-red-500 font-semibold hover:text-white">
                                 <svg
@@ -422,7 +488,16 @@ export default function Setting() {
                                       d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                                     />
                                   </svg>
-                                  <button>Edit</button>
+                                  <button
+                                    onClick={() => {
+                                      onEditPhone(
+                                        phone.uspo_entity_id,
+                                        phone.uspo_number
+                                      );
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
                                 </div>
                                 <div className="flex items-stretch border border-red-500 rounded-md px-2 py-1 ring-1 ring-red-500 hover:bg-red-600 mr-2 mb-1 text-red-500 font-semibold hover:text-white">
                                   <svg
@@ -500,18 +575,20 @@ export default function Setting() {
                               <div className="w-3/6">
                                 <div className="flex justify-between ">
                                   <div>
-                                    <p>{address.etad_addr?.addr_line1}</p>
-                                    <p>{address.etad_addr?.addr_line2}</p>
+                                    <p>{address?.etad_addr?.addr_line1}</p>
+                                    <p>{address?.etad_addr?.addr_line2}</p>
                                   </div>
                                   <div className="flex gap-2 mt-4">
-                                    <p>{address.etad_addr?.addr_postal_code}</p>
-                                    <p>({address.etad_adty?.adty_name})</p>
+                                    <p>
+                                      {address?.etad_addr?.addr_postal_code}
+                                    </p>
+                                    <p>({address?.etad_adty?.adty_name})</p>
                                   </div>
                                 </div>
                                 <div className="flex mb-3 gap-3 mt-1 ">
                                   <p>City :</p>
                                   <p>
-                                    {address.etad_addr?.addr_city?.city_name}
+                                    {address?.etad_addr?.addr_city?.city_name}
                                   </p>
                                 </div>
                               </div>

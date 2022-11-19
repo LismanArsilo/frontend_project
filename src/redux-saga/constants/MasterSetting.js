@@ -7,6 +7,14 @@ export const GET_USER_FAILED = "user/get/failed";
 export const GET_ONE_USER_REQUEST = "user/get/one/request";
 export const GET_ONE_USER_SUCCESS = "user/get/one/success";
 export const GET_ONE_USER_FAILED = "user/get/one/failed";
+// Edit
+export const EDIT_USER_REQUEST = "user/edit/request";
+export const EDIT_USER_SUCCESS = "user/edit/success";
+export const EDIT_USER_FAILED = "user/edit/failed";
+// Edit No Images
+export const EDITNOFILE_USER_REQUEST = "user/edit/nofile/request";
+export const EDITNOFILE_USER_SUCCESS = "user/edit/nofile/success";
+export const EDITNOFILE_USER_FAILED = "user/edit/nofile/failed";
 
 // Phone Number
 // GetSuper

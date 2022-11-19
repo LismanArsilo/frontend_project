@@ -58,8 +58,8 @@ export default function AddressAdd(props) {
       };
       dispatch(AddAddressRequest(payload));
       props.closeAdd();
-      // window.alert("Data Add Succesfully");
-      console.log(payload);
+      props.refresh();
+      window.alert("Data Add Succesfully");
     },
   });
   return (

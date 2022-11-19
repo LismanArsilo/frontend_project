@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -105,7 +105,7 @@ export default function ExperienceEdit(props) {
         <div className="border border-slate-800 mx-2 mr-6 mt-2 rounded-2xl mb-7 ">
           <div className="border border-slate-500 m-5">
             <div className="pl-2 mt-3 border-b-2 mx-2">
-              <h1>Add Experience</h1>
+              <h1>Edit Experience</h1>
             </div>
             <div>
               <form onSubmit={formik.handleSubmit}>
@@ -200,7 +200,11 @@ export default function ExperienceEdit(props) {
                       {Array.isArray(city)
                         ? city &&
                           city.map((city, index) => (
-                            <option key={index} value={city.city_id}>
+                            <option
+                              key={index}
+                              value={city.city_id}
+                              selected={city.city_id === experience.usex_id}
+                            >
                               {city.city_name}
                             </option>
                           ))

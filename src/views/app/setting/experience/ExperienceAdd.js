@@ -69,7 +69,6 @@ export default function ExperienceAdd(props) {
       props.closeAdd();
       props.refresh();
       window.alert("Data Add Succesfully");
-      console.info(payload);
     },
   });
   return (

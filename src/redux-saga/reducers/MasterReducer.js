@@ -42,6 +42,14 @@ const userMasterReducer = (state = INIT_STATE, action) => {
       return { ...state };
     case ActionType.GET_ONE_USER_SUCCESS:
       return GetOneUserSuccedd(state, action);
+    case ActionType.EDIT_USER_REQUEST:
+      return { ...state };
+    case ActionType.EDIT_USER_SUCCESS:
+      return EditUserSucceed(state, action);
+    case ActionType.EDITNOFILE_USER_REQUEST:
+      return { ...state };
+    case ActionType.EDITNOFILE_USER_SUCCESS:
+      return EditNoUserSucceed(state, action);
     //
     // Phone
     case ActionType.GET_PHONE_SUPER_REQUEST:
@@ -216,6 +224,27 @@ const GetOneUserSuccedd = (state, action) => {
   return {
     ...state,
     user: action.payload,
+  };
+};
+const EditUserSucceed = (state, action) => {
+  const { payload } = action;
+  const filterUser = state.users.filter(
+    (el) => el.user_entity_id !== payload[0].user_entity_id
+  );
+  return {
+    ...state,
+    users: [...filterUser, payload[0]],
+  };
+};
+
+const EditNoUserSucceed = (state, action) => {
+  const { payload } = action;
+  const filterUser = state.users.filter(
+    (el) => el.user_entity_id !== payload[0].user_entity_id
+  );
+  return {
+    ...state,
+    users: [...filterUser, payload[0]],
   };
 };
 

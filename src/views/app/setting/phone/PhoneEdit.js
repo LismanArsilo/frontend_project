@@ -3,21 +3,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { GetPhoneTypeRequest } from "../../../../redux-saga/actions/UserDrop";
-import { AddPhoneRequest } from "../../../../redux-saga/actions/MasterSetting";
+import {
+  EditPhoneRequest,
+  GetOnePhoneRequest,
+} from "../../../../redux-saga/actions/MasterSetting";
 
-export default function PhoneAdd(props) {
+export default function PhoneEdit(props) {
   const { phoneType } = useSelector((state) => state.userDropState);
+  const { phone } = useSelector((state) => state.masterSettingState);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(GetPhoneTypeRequest());
+    dispatch(GetOnePhoneRequest(props.id, props.idNext));
   }, []);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       uspo_entity_id: props.id,
-      uspo_number: "",
-      uspo_ponty_code: "",
+      uspo_number: phone.uspo_number,
+      uspo_ponty_code: phone.uspo_ponty_code,
     },
     validationSchema: Yup.object().shape({
       uspo_entity_id: Yup.string().required(),
@@ -36,11 +42,10 @@ export default function PhoneAdd(props) {
         uspo_number: values.uspo_number,
         uspo_ponty_code: values.uspo_ponty_code,
       };
-      dispatch(AddPhoneRequest(payload));
+      dispatch(EditPhoneRequest(payload));
       props.closeAdd();
       props.refresh();
       window.alert("Data Add Succesfully");
-      console.info(payload);
     },
   });
   return (
@@ -68,7 +73,7 @@ export default function PhoneAdd(props) {
         <div className="border border-slate-800 mx-2 mr-6 mt-2 rounded-2xl mb-7 ">
           <div className="border border-slate-500 m-5">
             <div className="pl-2 mt-3 border-b-2 mx-2">
-              <h1>Add Phone</h1>
+              <h1>Edit Phone</h1>
             </div>
             <div>
               <form onSubmit={formik.handleSubmit}>

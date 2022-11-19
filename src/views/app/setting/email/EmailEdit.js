@@ -1,16 +1,24 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { AddEmailRequest } from "../../../../redux-saga/actions/MasterSetting";
+import {
+  EditEmailRequest,
+  GetOneEmailRequest,
+} from "../../../../redux-saga/actions/MasterSetting";
 
-export default function EmailAdd(props) {
+export default function EmailEdit(props) {
   const dispatch = useDispatch();
+  const { email } = useSelector((state) => state.masterSettingState);
+  useEffect(() => {
+    dispatch(GetOneEmailRequest(props.id, props.idNext));
+  }, []);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       pmail_entity_id: props.id,
-      pmail_address: "",
+      pmail_address: email.pmail_address,
     },
     validationSchema: Yup.object().shape({
       pmail_entity_id: Yup.string().required(),
@@ -20,10 +28,11 @@ export default function EmailAdd(props) {
     }),
     onSubmit: async (values) => {
       const payload = {
+        pmail_id: email.pmail_id,
         pmail_entity_id: parseInt(values.pmail_entity_id),
         pmail_address: values.pmail_address,
       };
-      dispatch(AddEmailRequest(payload));
+      dispatch(EditEmailRequest(payload));
       props.closeAdd();
       props.refresh();
       window.alert("Data Add Succesfully");
@@ -54,7 +63,7 @@ export default function EmailAdd(props) {
         <div className="border border-slate-800 mx-2 mr-6 mt-2 rounded-2xl mb-7 ">
           <div className="border border-slate-500 m-5">
             <div className="pl-2 mt-3 border-b-2 mx-2">
-              <h1>Add Email</h1>
+              <h1>Edit Email</h1>
             </div>
             <div>
               <form onSubmit={formik.handleSubmit}>

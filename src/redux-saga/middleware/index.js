@@ -26,6 +26,8 @@ import {
   // User
   handleGetUser,
   handleGetOneUser,
+  handleEditUser,
+  handleEditNoUser,
   // Experience
   handleAddExperience,
   handleDelExperience,
@@ -113,6 +115,8 @@ function* watchAll() {
     // City & User
     takeEvery(ActionTypeMaster.GET_USER_REQUEST, handleGetUser),
     takeEvery(ActionTypeMaster.GET_ONE_USER_REQUEST, handleGetOneUser),
+    takeEvery(ActionTypeMaster.EDIT_USER_REQUEST, handleEditUser),
+    takeEvery(ActionTypeMaster.EDITNOFILE_USER_REQUEST, handleEditNoUser),
     // Phone
     takeEvery(ActionTypeMaster.GET_PHONE_SUPER_REQUEST, handleGetPhoneSuper),
     takeEvery(ActionTypeMaster.GET_PHONE_REQUEST, handleGetPhone),

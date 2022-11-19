@@ -94,6 +94,10 @@ import {
   AddSkillFailed,
   DelSkillSuccess,
   DelSkillFailed,
+  EditUserSuccess,
+  EditUserFailed,
+  EditNoUserSuccess,
+  EditNoUserFailed,
 } from "../actions/MasterSetting";
 
 //
@@ -113,6 +117,25 @@ function* handleGetOneUser(action) {
     yield put(GetOneUserSuccess(result));
   } catch (error) {
     yield put(GetOneUserFailed(error));
+  }
+}
+function* handleEditUser(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(apiUserSetting.editUser, payload);
+    yield put(EditUserSuccess(result.data[1]));
+  } catch (error) {
+    yield put(EditUserFailed(error));
+  }
+}
+
+function* handleEditNoUser(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(apiUserSetting.editNoUser, payload);
+    yield put(EditNoUserSuccess(result.data[1]));
+  } catch (error) {
+    yield put(EditNoUserFailed(error));
   }
 }
 //
@@ -203,9 +226,9 @@ function* handleGetPhone(action) {
 }
 function* handleGetOnePhone(action) {
   const { payload } = action;
-  const { Phone } = action;
+  const { phone } = action;
   try {
-    const result = yield call(apiPhone.findOne, payload, Phone);
+    const result = yield call(apiPhone.findOne, payload, phone);
     yield put(GetOnePhoneSuccess(result));
   } catch (error) {
     yield put(GetOnePhoneFailed(error));
@@ -215,7 +238,7 @@ function* handleEditPhone(action) {
   const { payload } = action;
   try {
     const result = yield call(apiPhone.update, payload);
-    yield put(EditPhoneSuccess(result.data));
+    yield put(EditPhoneSuccess(payload));
   } catch (error) {
     yield put(EditPhoneFailed(error));
   }
@@ -464,6 +487,8 @@ export {
   // User
   handleGetUser,
   handleGetOneUser,
+  handleEditUser,
+  handleEditNoUser,
   // City
   handleGetCity,
   // Experience

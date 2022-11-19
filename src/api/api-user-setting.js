@@ -17,8 +17,35 @@ const findOne = async (id) => {
     return error.message;
   }
 };
+const editUser = async (payload) => {
+  const entity_id = parseInt(payload.get("entity_id"));
+  try {
+    const result = await axios.put(
+      `${config.domain}/user/${entity_id}`,
+      payload
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+const editNoUser = async (payload) => {
+  const entity_id = payload.entity_id;
+  try {
+    const result = await axios.put(
+      `${config.domain}/user/nofile/${entity_id}`,
+      payload
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
 
 export default {
   findAllSuper,
   findOne,
+  editUser,
+  editNoUser,
 };

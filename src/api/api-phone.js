@@ -38,7 +38,7 @@ const create = async (payload) => {
 const update = async (payload) => {
   try {
     const result = await axios.put(
-      `${config.domain}/phone/${payload.phone_number}`,
+      `${config.domain}/phone/${payload.uspo_number}`,
       payload
     );
     return result;

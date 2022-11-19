@@ -25,6 +25,32 @@ export const GetOneUserFailed = (payload) => ({
   type: ActionType.GET_ONE_USER_FAILED,
   payload,
 });
+// Edit
+export const EditUserRequest = (payload) => ({
+  type: ActionType.EDIT_USER_REQUEST,
+  payload,
+});
+export const EditUserSuccess = (payload) => ({
+  type: ActionType.EDIT_USER_SUCCESS,
+  payload,
+});
+export const EditUserFailed = (payload) => ({
+  type: ActionType.EDIT_USER_FAILED,
+  payload,
+});
+// Edit No Images
+export const EditNoUserRequest = (payload) => ({
+  type: ActionType.EDITNOFILE_USER_REQUEST,
+  payload,
+});
+export const EditNoUserSuccess = (payload) => ({
+  type: ActionType.EDITNOFILE_USER_SUCCESS,
+  payload,
+});
+export const EditNoUserFailed = (payload) => ({
+  type: ActionType.EDITNOFILE_USER_FAILED,
+  payload,
+});
 
 // Email
 // Super
